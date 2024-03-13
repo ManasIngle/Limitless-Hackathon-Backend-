@@ -2,7 +2,7 @@ const app = require("./app");
 const mongoose = require("mongoose");
 const connectWithDB = require("./config/dbConfig");
 const server = require("http").createServer(app);
-const authRoute=require('./routes/auth');
+
 const PORT = process.env.PORT || 5000;
 
 async function startServer() {
@@ -23,9 +23,6 @@ async function startServer() {
     console.log("Server is shutting down");
     process.exit();
   }
-
-  app.use("/auth",authRoute);
-
 }
 
 startServer();

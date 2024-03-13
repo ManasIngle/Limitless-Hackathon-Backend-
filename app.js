@@ -32,8 +32,6 @@ app.use(function (err, req, res, next) {
 app.use(morgan('dev'));
 
 
-
-
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/account', accountRoutes);

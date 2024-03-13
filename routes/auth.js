@@ -14,10 +14,10 @@
 
 const router = require('express').Router();
 const { login, register } = require('../controllers/auth');
-const authenticateUser = require('../middlewares/IsloggedIn');
+const authenticateUser = require('../middlewares/authmiddleware');
 
 // Define routes
-router.post('/login', authenticateUser, login);
+router.post('/login', login);
 router.post('/register', register);
 
 module.exports = router;
