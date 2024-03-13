@@ -9,7 +9,6 @@ async function getAccount(req, res) {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-
         // Return the user account details
         res.status(200).json({ user });
     } catch (error) {
@@ -21,14 +20,13 @@ async function getAccount(req, res) {
 
 async function updateAccount(req, res) {
     try {
-        // Update account logic
         const userId = req.user.id; // Assuming you have middleware to attach user info to the request
-        const { username, email } = req.body;
+        const { name, email, password } = req.body;
 
         // Validate input if necessary
 
         // Update user's account details
-        const user = await User.findByIdAndUpdate(userId, { username, email }, { new: true });
+        const user = await User.findByIdAndUpdate(userId, { name, email, password }, { new: true });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -42,8 +40,25 @@ async function updateAccount(req, res) {
     }
 }
 
+async function getAssets(req, res) {
+    try{
+        const userId = req.userData.userId;
+        const user = await User.findById(userId).populate('assets');
+        if(!user){
+            return res.status(404).json({ message: "User not found" });
+        }
+        const assets = user.assets;
+        
+        res.status(200).json({ assets });
+    }
+    catch(error){
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
 
 module.exports = {
     getAccount,
-    updateAccount
+    updateAccount,
+    getAssets
 }

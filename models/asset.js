@@ -7,7 +7,11 @@ const assetSchema = new mongoose.Schema({
         required: true
     },
 
-    symbol: {
+    logo: {
+        type: String,
+        default: 'https://static.mediawire.in//images/default-corporate-image.jpg'
+    },
+    ticker: {
         type: String,
         required: true,
         unique: true,
@@ -24,13 +28,18 @@ const assetSchema = new mongoose.Schema({
         enum: ['Equity', 'Fixed Income', 'Commodity', 'Currency']
     },
 
-    marketValue: {
-        type: Number,
-        min: 0
-    },
-
-
-
+    PastValues: [
+        {
+            date: {
+                type: Date,
+                required: true
+            },
+            price: {
+                type: Number,
+                required: true
+            }
+        }
+    ],
 });
 
 module.exports = mongoose.model('Asset', assetSchema);

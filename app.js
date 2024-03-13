@@ -5,7 +5,7 @@ const { default: helmet } = require("helmet");
 const { Logger } = require("logger");
 const morgan = require("morgan");
 const authRoutes = require('./routes/auth');
-const accountRoutes = require('./routes/account');
+const accountRoutes = require('./routes/user');
 
 
 const app = express();
