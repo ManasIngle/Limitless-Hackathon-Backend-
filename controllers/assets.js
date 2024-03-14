@@ -1,22 +1,25 @@
 const Asset = require('../models/asset');
 
 async function getAssets(req, res) {
-    try {
-        // Fetch all assets logic
-        const assets = await Asset.find();
-
-        // Return the assets
+    try{
+        const userId = req.userData.userId;
+        const user = await User.findById(userId).populate('assets');
+        if(!user){
+            return res.status(404).json({ message: "User not found" });
+        }
+        const assets = user.assets;
+        
         res.status(200).json({ assets });
-    } catch (error) {
+    }
+    catch(error){
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
 
-async function getAsset(req, res) {
+async function getSingleAsset(req, res) {
     try {
-        // Fetch single asset logic
-        const assetId = req.params.id; // Assuming the asset ID is passed as a route parameter
+        const assetId = req.params.id;
         const asset = await Asset.findById(assetId);
 
         if (!asset) {
@@ -33,5 +36,5 @@ async function getAsset(req, res) {
 
 module.exports = {
     getAssets,
-    getAsset
+    getSingleAsset
 };

@@ -7,6 +7,6 @@ router.get('/',authmiddleware, getAccount);
 
 router.put('/',authmiddleware, updateAccount);
 
-router.get('/assets',authmiddleware, getAssets);
+
 
 module.exports = router;

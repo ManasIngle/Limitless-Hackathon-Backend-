@@ -40,25 +40,8 @@ async function updateAccount(req, res) {
     }
 }
 
-async function getAssets(req, res) {
-    try{
-        const userId = req.userData.userId;
-        const user = await User.findById(userId).populate('assets');
-        if(!user){
-            return res.status(404).json({ message: "User not found" });
-        }
-        const assets = user.assets;
-        
-        res.status(200).json({ assets });
-    }
-    catch(error){
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-}
 
 module.exports = {
     getAccount,
     updateAccount,
-    getAssets
 }

@@ -5,7 +5,7 @@ const { default: helmet } = require("helmet");
 const { Logger } = require("logger");
 const morgan = require("morgan");
 const authRoutes = require('./routes/auth');
-const accountRoutes = require('./routes/user');
+const userRoutes = require('./routes/user');
 
 
 const app = express();
@@ -33,8 +33,8 @@ app.use(morgan('dev'));
 
 
 // Use routes
-app.use('/api/auth', authRoutes);
-app.use('/api/account', accountRoutes);
+app.use('/auth', authRoutes);
+app.use('/user',userRoutes);
 
 // app.use('/api/account', accountController.getAccount);
 // app.use('/api/account/update', accountController.updateAccount);
