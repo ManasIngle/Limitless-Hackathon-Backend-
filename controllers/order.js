@@ -1,10 +1,11 @@
 const Orders = require('../models/orders');
 const Asset = require('../models/asset');
 const User = require('../models/user');
+const mongoose = require('mongoose')
 
 exports.createListing = async (req, res) => {
     try{
-        const userId = req.userData.userId
+        const userId = req.userData.userId;
         const { assetName,description,assetClass,price,quantity } = req.body;
 
         //give a ticker generation algorithm the ticker should be unique and related to the asset name
@@ -24,4 +25,16 @@ exports.createListing = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
+exports.history = async (req, res) => {
+    try {
+        const userId = new mongoose.Types.ObjectId(req.userData.userId) ;
+        const orders = await Orders.find({ $or: [{ lister:userId }, { buyer: userId }] });
+        res.status(200).json({ orders });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
 
