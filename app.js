@@ -18,6 +18,7 @@ app.use(
         origin: [
             "http://127.0.0.1:3000",
             "http://localhost:3000",
+            "https://limitless-frontend-pi.vercel.app"
         ],
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         credentials: true,
@@ -28,7 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(helmet());
-app.use(function (err, req, res, next) {
+app.use(function(err, req, res, next) {
     console.error(err.stack)
     res.status(500).send('Something broke!')
 })
@@ -37,7 +38,7 @@ app.use(morgan('dev'));
 
 // Use routes
 app.use('/auth', authRoutes);
-app.use('/user',userRoutes);
+app.use('/user', userRoutes);
 app.use('/order', orderRoutes);
 app.use('/asset', assetRoutes);
 
