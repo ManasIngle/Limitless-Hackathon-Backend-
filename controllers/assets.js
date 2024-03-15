@@ -1,13 +1,15 @@
 const Asset = require('../models/asset');
+const User = require('../models/user');
 
 async function getAssets(req, res) {
     try{
         const userId = req.userData.userId;
-        const user = await User.findById(userId).populate('assets');
-        if(!user){
-            return res.status(404).json({ message: "User not found" });
+        const user = await User.findById(userId);
+        const assets = [];
+        for (let i = 0; i < user.assets.length; i++) {
+            const asset = await Asset.findById(user.assets[i].assetId);
+            assets.push({ asset, quantity: user.assets[i].quantity });
         }
-        const assets = user.assets;
         
         res.status(200).json({ assets });
     }
@@ -26,7 +28,6 @@ async function getSingleAsset(req, res) {
             return res.status(404).json({ message: "Asset not found" });
         }
 
-        // Return the asset
         res.status(200).json({ asset });
     } catch (error) {
         console.error(error);

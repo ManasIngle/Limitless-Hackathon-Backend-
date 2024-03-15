@@ -3,7 +3,7 @@ const User = require('../models/user');
 async function getAccount(req, res) {
     try {
         // Fetch account logic
-        const userId = req.user.id; // Assuming you have middleware to attach user info to the request
+        const userId = req.user.id;
         const user = await User.findById(userId);
 
         if (!user) {

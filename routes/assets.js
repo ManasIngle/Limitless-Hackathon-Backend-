@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const authmiddleware = require('../middlewares/authmiddleware');
 
-const { getAssets, getAsset } = require('../controllers/assets');
+const { getAssets, getSingleAsset } = require('../controllers/assets');
 
-router.get('/assets',authmiddleware, getAssets);
+router.get('/userAssets',authmiddleware, getAssets);
 
-router.get('/:id', getAsset);
+router.get('/:id', getSingleAsset);
 
 module.exports = router;
