@@ -7,8 +7,6 @@ exports.createListing = async (req, res) => {
     try{
         const userId = req.userData.userId;
         const { assetName,description,assetClass,price,quantity } = req.body;
-
-        //give a ticker generation algorithm the ticker should be unique and related to the asset name
         const ticker = assetName.split(' ').join('').toUpperCase();
         
         const asset = await Asset.create({ name: assetName, ticker, description, assetClass});
@@ -36,5 +34,18 @@ exports.history = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
+exports.findListings = async (req, res) => {
+    try {
+        const orders = await Orders.find({ buyer: null });
+        res.status(200).json({ orders });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+
+
 
 
