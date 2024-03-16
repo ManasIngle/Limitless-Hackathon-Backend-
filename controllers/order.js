@@ -45,6 +45,73 @@ exports.findListings = async (req, res) => {
     }
 }
 
+exports.buy = async (req, res) => {
+    try {
+        const userId = req.userData.userId;
+        const { orderId} = req.body;
+        console.log(orderId);
+        const order = await Orders.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }      
+        order.buyer = userId;
+        order.status = 'Processing';
+        order.save();
+        res.status(200).json({ message: "Order placed successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+exports.confirmation = async (req, res) => {
+    try{
+        const userId = req.userData.userId;
+        const { orderId } = req.body;
+        const order = await Orders.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        if (order.lister != userId) {
+            return res.status(403).json({ message: "You are not authorized to confirm this order" });
+        }
+        order.status = 'Completed';
+        const buyer = await User.findById(order.buyer);
+        const seller = await User.findById(order.lister);
+        buyer.assets.push({ assetId: order.assetId, quantity: order.quantity });
+        seller.assets.pop({ assetId: order.assetId, quantity: order.quantity });
+        buyer.save();
+        seller.save();
+        order.save();
+        res.status(200).json({ message: "Order confirmed successfully" });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+exports.cancel = async (req, res) => {
+    try{
+        const userId = req.userData.userId;
+        const { orderId } = req.body;
+        const order = await Orders.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        if (order.lister != userId) {
+            return res.status(403).json({ message: "You are not authorized to cancel this order" });
+        }
+        order.status = 'Cancelled';
+        order.save();
+        res.status(200).json({ message: "Order cancelled successfully" });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
 
 
 
