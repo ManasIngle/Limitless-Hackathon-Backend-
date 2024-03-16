@@ -11,6 +11,11 @@ const orderSchema = new mongoose.Schema({
         ref: 'Asset',
         required: true
     },
+    assetClass: {
+        type: String,
+        required: true,
+        enum: ['Equity', 'Commodity', 'Currency']
+    },
     quantity: {
         type: Number,
         required: true

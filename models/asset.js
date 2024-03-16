@@ -25,7 +25,7 @@ const assetSchema = new mongoose.Schema({
     assetClass: {
         type: String,
         required: true,
-        enum: ['Equity', 'Fixed Income', 'Commodity', 'Currency']
+        enum: ['Equity', 'Commodity', 'Currency']
     },
 
     PastValues: [

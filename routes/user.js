@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const authmiddleware = require('../middlewares/authmiddleware');
 
-const { getAccount, updateAccount, getAssets } = require('../controllers/user');
+const { getAccount, updateAccount } = require('../controllers/user');
 
 router.get('/',authmiddleware, getAccount);
 
