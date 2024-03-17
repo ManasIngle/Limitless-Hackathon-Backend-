@@ -41,8 +41,8 @@ exports.history = async (req, res) => {
 
 exports.findListings = async (req, res) => {
     try {
-        const{ assetclass} = req.query;  
-        const orders = await Orders.find({ status: 'Pending'});
+        const{ assetclass} = req.query;
+        const orders = await Orders.find({ status: 'Pending'}).populate('assetId');
         if (assetclass) {
             const filteredOrders = orders.filter(order => order.assetClass === assetclass);
             return res.status(200).json({ orders: filteredOrders });

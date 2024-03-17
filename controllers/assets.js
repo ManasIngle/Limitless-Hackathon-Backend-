@@ -4,14 +4,8 @@ const User = require('../models/user');
 async function getAssets(req, res) {
     try{
         const userId = req.userData.userId;
-        const user = await User.findById(userId);
-        const assets = [];
-        for (let i = 0; i < user.assets.length; i++) {
-            const asset = await Asset.findById(user.assets[i].assetId);
-            assets.push({ asset, quantity: user.assets[i].quantity });
-        }
-        
-        res.status(200).json({ assets });
+        const user = await User.findById(userId).populate('assets.assetId');
+        res.status(200).json({ user });
     }
     catch(error){
         console.error(error);
