@@ -9,8 +9,9 @@ exports.createListing = async (req, res) => {
         const userId = req.userData.userId;
         const { assetName,description,assetClass,price,quantity,ticker } = req.body;
         let asset = await Asset.findOne({ ticker });
+
         if (!asset) {
-            asset = await Asset.create({ assetName,description,assetClass,price,ticker });
+            asset = await Asset.create({name:assetName,ticker,description,assetClass});
         }
         const user = await User.findById(userId);
         console.log(asset._id);
