@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const orderRoutes = require('./routes/order');
 const assetRoutes = require('./routes/assets');
+const transactionRoutes = require('./routes/transactions');
 
 
 const app = express();
@@ -41,6 +42,7 @@ app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/order', orderRoutes);
 app.use('/asset', assetRoutes);
+app.use('/transaction', transactionRoutes);
 
 // app.use('/api/account', accountController.getAccount);
 // app.use('/api/account/update', accountController.updateAccount);

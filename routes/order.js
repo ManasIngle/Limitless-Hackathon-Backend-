@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const authmiddleware = require('../middlewares/authmiddleware');
 
-const {createListing,history,findListings,buy,confirmation,cancel} = require('../controllers/order');
+const {createListing,history,findListings,getSingleListing,buy,confirmation,cancel} = require('../controllers/order');
 
 router.post('/create', authmiddleware, createListing);
 
@@ -9,9 +9,11 @@ router.get('/history',authmiddleware,history);
 
 router.get('/findListings',findListings);
 
-router.post('/buy',authmiddleware,buy);
+router.get('/getSingleListing',getSingleListing);
 
-router.post('/confirm',authmiddleware,confirmation);
+router.get('/userListings',authmiddleware,history);
+
+router.post('/buy',authmiddleware,buy);
 
 router.post('/cancel',authmiddleware,cancel);
 

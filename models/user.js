@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     },
-    accountBalance: {
+    rating: {
         type: Number,
         default: 0
     },
