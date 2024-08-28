@@ -2,6 +2,7 @@ const Transactions = require('../models/transactions');
 const Asset = require('../models/asset');
 const User = require('../models/user');
 const mongoose = require('mongoose')
+const Orders = require('../models/orders');
 
 exports.getAllTransactions = async (req, res) => {
     try {
@@ -37,6 +38,21 @@ exports.getSingleTransaction = async (req, res) => {
     }
 }
 
+exports.sellerTransactions = async (req, res) => {
+    try {
+        const userId = new mongoose.Types.ObjectId(req.userData.userId);
+        console.log(userId);
+        // send the transactions where the seller is the current user and status is pending
+        const transactions = await Transactions.find({ seller: userId }).populate('assetId');
+        const filteredTransactions = transactions.filter(transaction => transaction.status === 'Pending');
+        console.log(filteredTransactions);
+        res.status(200).json({ filteredTransactions });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
 exports.confirmTransaction = async (req, res) => {
     try {
         const userId = new mongoose.Types.ObjectId(req.userData.userId);
@@ -45,8 +61,8 @@ exports.confirmTransaction = async (req, res) => {
         if (!transaction) {
             return res.status(404).json({ message: "Transaction not found" });
         }
-        if(transaction.buyer.toString() !== userId.toString()){
-            console.log(transaction.buyer, userId);
+        if(transaction.seller.toString() !== userId.toString()){
+            console.log(transaction.seller, userId);
             return res.status(403).json({ message: "Unauthorized" });
         }
         if(isExpired(transaction.date)){
@@ -54,6 +70,14 @@ exports.confirmTransaction = async (req, res) => {
             await transaction.save();
             return res.status(400).json({ message: "Transaction expired" });
         }
+        if(transaction.status === 'Completed'){
+            return res.status(400).json({ message: "Transaction already completed" });
+        }
+        
+        const Order = await Orders.findById(transaction.orderId);
+        Order.status = 'Completed';
+        await Order.save();
+
         transaction.status = 'Completed';
         await transaction.save();
         const buyer = await User.findById(transaction.buyer);

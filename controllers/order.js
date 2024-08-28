@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 
 exports.createListing = async (req, res) => {
     try{
+        console.log(req.userData);
         const userId = req.userData.userId;
         const { assetName,description,assetClass,price,quantity,ticker } = req.body;
         let asset = await Asset.findOne({ ticker });
@@ -14,10 +15,8 @@ exports.createListing = async (req, res) => {
             asset = await Asset.create({name:assetName,ticker,description,assetClass});
         }
         const user = await User.findById(userId);
-        console.log(asset._id);
         //if user already has the asset, update the quantity in user I have a assets array and in that I have assetId and quantity
         const assetIndex = user.assets.findIndex(asset1 => asset1.assetId.toString() === asset._id.toString());
-        console.log(assetIndex);
         if (assetIndex !== -1) {
             //add the values of quantity
             const quantityToAdd = parseInt(quantity);
@@ -39,13 +38,9 @@ exports.createListing = async (req, res) => {
 exports.history = async (req, res) => {
     try {
         const userId = req.userData.userId;
-        //add filter for status
-        const{ status} = req.query;
+        console.log(userId);
         const orders = await Orders.find({ lister: userId }).populate('assetId');
-        if (status) {
-            const filteredOrders = orders.filter(order => order.status === status);
-            return res.status(200).json({ orders: filteredOrders });
-        }
+        console.log(orders);
         res.status(200).json({ orders });
     } catch (error) {
         console.error(error);
@@ -86,7 +81,7 @@ exports.getSingleListing = async (req, res) => {
 exports.buy = async (req, res) => {
     try {
         const userId = req.userData.userId;
-        const { orderId} = req.body;
+        const {orderId} = req.body;
         const order = await Orders.findById(orderId);
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
@@ -97,8 +92,8 @@ exports.buy = async (req, res) => {
         if (order.status !== 'Pending') {
             return res.status(400).json({ message: "Order is not available" });
         }
-        const transaction = await Transaction.create({ buyer: userId, seller: order.lister, assetId: order.assetId, quantity: order.quantity, price: order.price });        
-        order.status = 'Completed';
+        const transaction = await Transaction.create({orderId: orderId ,buyer: userId, seller: order.lister, assetId: order.assetId, quantity: order.quantity, price: order.price });        
+        order.status = 'Processing';
         order.buyer = userId;
         order.save();
         res.status(200).json({ message: "Order placed successfully" });
