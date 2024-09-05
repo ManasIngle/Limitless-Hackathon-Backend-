@@ -1,22 +1,20 @@
-name: Docker Image CI
+name: cd pipeline
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_run:
+    workflows: [ "ci pipeline" ]
+    types:
+        - completed
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-    - uses: actions/checkout@v4
-    - name: Login Dockerhub
-      env:
-        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - name: Pull Docker image
+      run: sudo docker pull kedar2003/otc-backend:latest
+    - name: Delete Old docker
+      run: sudo docker rm -f otc-backend-container || true
+    - name: Run Docker Container
+      run: sudo docker run -d -p 8080:8080 --name otc-backend-container kedar2003/otc-backend
+      
     
-    - name: Build the Docker image
-      run: docker build -t kedar2003/otc-backend:latest .
-    
-    - name: Push to Dockerhub
-      run: docker push kedar2003/otc-backend:latest
