@@ -35,8 +35,9 @@ app.use(function(err, req, res, next) {
     res.status(500).send('Something broke!')
 })
 app.use(morgan('dev'));
-
-
+app.get('/', (req, res) => {
+    res.send('Welcome to the API!');
+});
 // Use routes
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
