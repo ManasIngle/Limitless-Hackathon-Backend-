@@ -17,9 +17,7 @@ const app = express();
 app.use(
     cors({
         origin: [
-            "http://127.0.0.1:3000",
-            "http://localhost:3000",
-            "https://limitless-frontend-pi.vercel.app"
+            "*"
         ],
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         credentials: true,
