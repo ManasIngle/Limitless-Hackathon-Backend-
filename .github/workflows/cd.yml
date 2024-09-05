@@ -4,17 +4,21 @@ on:
   workflow_run:
     workflows: [ "ci pipeline" ]
     types:
-        - completed
+      - completed
 
 jobs:
-  build:
+  deploy:
     runs-on: self-hosted
+
     steps:
     - name: Pull Docker image
-      run: sudo docker pull kedar2003/otc-backend:latest
-    - name: Delete Old docker
-      run: sudo docker rm -f otc-backend-container || true
-    - name: Run Docker Container
-      run: sudo docker run -d -p 8080:8080 --name otc-backend-container kedar2003/otc-backend
-      
-    
+      run: docker pull kedar2003/otc-backend:latest
+
+    - name: Stop and Remove Old Docker Container
+      run: docker rm -f otc-backend-container || true
+
+    - name: Run New Docker Container
+      run: docker run -d -p 8080:8080 --name otc-backend-container kedar2003/otc-backend:latest
+
+    - name: Clean up old Docker images
+      run: docker image prune -f
