@@ -11,8 +11,6 @@ router.get('/findListings',findListings);
 
 router.get('/getSingleListing',getSingleListing);
 
-router.get('/userListings',authmiddleware,history);
-
 router.post('/buy',authmiddleware,buy);
 
 router.post('/cancel',authmiddleware,cancel);
